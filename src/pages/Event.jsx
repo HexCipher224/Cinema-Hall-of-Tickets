@@ -1,4 +1,4 @@
-Event.jsx
+
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
 const Events = () => {

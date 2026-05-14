@@ -1,4 +1,4 @@
-Layout.jsx 
+
 import NavigationBar from './Navbar';
 import Footer from './Footer';
 

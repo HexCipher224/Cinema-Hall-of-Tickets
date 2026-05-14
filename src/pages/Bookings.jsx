@@ -1,4 +1,4 @@
-Booking.jsx
+
 import { Container, Row, Col, Alert } from 'react-bootstrap';
 
 const Bookings = () => {
