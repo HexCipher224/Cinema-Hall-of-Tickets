@@ -5,15 +5,18 @@ import { fetchBookings, cancelBooking } from '../services/bookingApi';
 import { fetchEvents } from '../services/api';
 
 const Bookings = () => {
+  // State variables (always first)
   const [bookings, setBookings] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  // ✅ Helper function to find event for a booking (defined before useEffect)
+  const getEventForBooking = (booking) => {
+    return events.find(event => event.id === booking.eventId);
+  };
 
+  // ✅ Function to load data (defined before useEffect)
   const loadData = async () => {
     try {
       setLoading(true);
@@ -32,10 +35,7 @@ const Bookings = () => {
     }
   };
 
-  const getEventForBooking = (booking) => {
-    return events.find(event => event.id === booking.eventId);
-  };
-
+  // ✅ Function to cancel booking (defined before useEffect)
   const handleCancelBooking = async (bookingId) => {
     if (window.confirm('Are you sure you want to cancel this booking?')) {
       try {
@@ -48,6 +48,12 @@ const Bookings = () => {
     }
   };
 
+  // ✅ useEffect (now loadData is already defined)
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // Loading spinner
   if (loading) {
     return (
       <Container className="text-center py-5">
@@ -57,6 +63,7 @@ const Bookings = () => {
     );
   }
 
+  // Main render
   return (
     <Container className="py-5">
       <h1 className="mb-4">My Bookings 🎫</h1>
