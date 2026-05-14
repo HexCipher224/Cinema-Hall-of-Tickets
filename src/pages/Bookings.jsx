@@ -1,66 +1,101 @@
-import { Card, Button, Badge } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import BookingCard from '../components/BookingCard';
+import { fetchBookings, cancelBooking } from '../services/bookingApi';
+import { fetchEvents } from '../services/api';
 
-const BookingCard = ({ booking, event, onCancel }) => {
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Date TBA';
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+const Bookings = () => {
+  const [bookings, setBookings] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [bookingsData, eventsData] = await Promise.all([
+        fetchBookings(),
+        fetchEvents()
+      ]);
+      setBookings(bookingsData);
+      setEvents(eventsData);
+      setError('');
+    } catch (err) {
+      setError('Failed to load bookings. Make sure json-server is running.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const getEventForBooking = (booking) => {
+    return events.find(event => event.id === booking.eventId);
+  };
+
+  const handleCancelBooking = async (bookingId) => {
+    if (window.confirm('Are you sure you want to cancel this booking?')) {
+      try {
+        await cancelBooking(bookingId);
+        setBookings(bookings.filter(booking => booking.id !== bookingId));
+        alert('Booking cancelled successfully!');
+      } catch (err) {
+        setError('Failed to cancel booking.');
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <Container className="text-center py-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-2">Loading your bookings...</p>
+      </Container>
+    );
+  }
+
   return (
-    <Card className="h-100 shadow-sm">
-      <Card.Body>
-        <div className="d-flex justify-content-between align-items-start mb-3">
-          <Card.Title className="mb-0">
-            {event?.title || 'Event Unavailable'}
-          </Card.Title>
-          <Badge bg="success" pill>
-            Confirmed
-          </Badge>
-        </div>
-        
-        <div className="mb-3">
-          <div className="text-muted small mb-1">
-            📅 {formatDate(event?.date)}
-          </div>
-          <div className="text-muted small mb-1">
-            📍 {event?.location || 'Location TBA'}
-          </div>
-          <div className="text-muted small">
-            🎫 {booking.quantity} ticket(s)
-          </div>
-        </div>
-        
-        <hr />
-        
-        <div className="d-flex justify-content-between align-items-center">
-          <div>
-            <small className="text-muted">Total Amount</small>
-            <h5 className="text-primary mb-0">₹{booking.totalPrice}</h5>
-          </div>
-          <div>
-            <small className="text-muted">Booking ID</small>
-            <p className="mb-0 small">#{booking.id}</p>
-          </div>
-        </div>
-        
-        <div className="mt-3 text-muted small">
-          Booked on: {new Date(booking.bookedAt).toLocaleDateString()}
-        </div>
-      </Card.Body>
+    <Container className="py-5">
+      <h1 className="mb-4">My Bookings 🎫</h1>
       
-      <Card.Footer className="bg-white">
-        <Button 
-          variant="outline-danger" 
-          size="sm" 
-          onClick={() => onCancel(booking.id)}
-          className="w-100"
-        >
-          ❌ Cancel Booking
-        </Button>
-      </Card.Footer>
-    </Card>
+      {error && (
+        <Alert variant="danger" onClose={() => setError('')} dismissible>
+          {error}
+        </Alert>
+      )}
+      
+      {bookings.length === 0 ? (
+        <Alert variant="info" className="text-center">
+          <h5>No bookings yet!</h5>
+          <p>Go to the Events page to book your first ticket.</p>
+          <Alert.Link href="/events">Browse Events →</Alert.Link>
+        </Alert>
+      ) : (
+        <>
+          <p className="text-muted mb-4">
+            You have {bookings.length} booking(s) confirmed.
+          </p>
+          <Row className="g-4">
+            {bookings.map(booking => {
+              const event = getEventForBooking(booking);
+              return (
+                <Col key={booking.id} md={6} lg={4}>
+                  <BookingCard
+                    booking={booking}
+                    event={event}
+                    onCancel={handleCancelBooking}
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+        </>
+      )}
+    </Container>
   );
 };
 
-export default BookingCard;
+export default Bookings;
