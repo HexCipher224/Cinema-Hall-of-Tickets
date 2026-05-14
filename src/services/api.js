@@ -2,6 +2,9 @@ const BASE_URL = "http://localhost:5000/events";
 
 export const fetchEvents = async () => {
   const res = await fetch(BASE_URL);
+   if (!res.ok) {
+    throw new Error("Failed to fetch events");
+  }
   return res.json();
 };
 

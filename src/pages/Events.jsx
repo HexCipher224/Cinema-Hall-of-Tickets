@@ -17,18 +17,23 @@ const Events = () => {
   }, []);
 
   const loadEvents = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchEvents();
-      setEvents(data);
-      setError('');
-    } catch (err) {
-      setError('Failed to load events. Make sure json-server is running on port 5000');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+
+    const data = await fetchEvents();
+
+    console.log("EVENTS API RESPONSE:", data); // 👈 ADD THIS
+
+    setEvents(data);
+
+    setError('');
+  } catch (err) {
+    console.error(err);
+    setError('Failed to load events. Make sure json-server is running on port 5000');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCreate = async (eventData) => {
     try {
