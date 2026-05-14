@@ -1,13 +1,14 @@
 import { Card, Button, Badge } from 'react-bootstrap';
-
+import { imageMap } from "../assets/imageMap";
 const EventCard = ({ event, onEdit, onDelete }) => {
   return (
     <Card className="h-100 shadow-sm">
-      <Card.Img 
-        variant="top" 
-        src={event.imageUrl || 'https://via.placeholder.com/300x200?text=Event'} 
-        style={{ height: '200px', objectFit: 'cover' }}
-      />
+      <Card.Img
+  variant="top"
+  src={imageMap[event.image] || Object.values(imageMap)[0]}
+  style={{ height: '200px', objectFit: 'cover' }}
+/>
+
       <Card.Body>
         <div className="d-flex justify-content-between align-items-start mb-2">
           <Card.Title className="mb-0">{event.title}</Card.Title>
