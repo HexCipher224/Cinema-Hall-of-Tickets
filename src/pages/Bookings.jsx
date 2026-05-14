@@ -1,41 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import BookingCard from '../components/BookingCard';
 import { fetchBookings, cancelBooking } from '../services/bookingApi';
 import { fetchEvents } from '../services/api';
 
 const Bookings = () => {
-  // State variables (always first)
   const [bookings, setBookings] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Use a ref to track if component is mounted
+  const isMounted = useRef(true);
 
-  // ✅ Helper function to find event for a booking (defined before useEffect)
+  useEffect(() => {
+    // Cleanup function to prevent state updates if component unmounts
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [bookingsData, eventsData] = await Promise.all([
+          fetchBookings(),
+          fetchEvents()
+        ]);
+        
+        // Only update state if component is still mounted
+        if (isMounted.current) {
+          setBookings(bookingsData);
+          setEvents(eventsData);
+          setLoading(false);
+          setError('');
+        }
+      } catch (err) {
+        if (isMounted.current) {
+          setError('Failed to load bookings. Make sure json-server is running on port 5000');
+          setLoading(false);
+          console.error('Error:', err);
+        }
+      }
+    };
+    
+    loadData();
+  }, []);
+
   const getEventForBooking = (booking) => {
     return events.find(event => event.id === booking.eventId);
   };
 
-  // ✅ Function to load data (defined before useEffect)
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const [bookingsData, eventsData] = await Promise.all([
-        fetchBookings(),
-        fetchEvents()
-      ]);
-      setBookings(bookingsData);
-      setEvents(eventsData);
-      setError('');
-    } catch (err) {
-      setError('Failed to load bookings. Make sure json-server is running.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ✅ Function to cancel booking (defined before useEffect)
   const handleCancelBooking = async (bookingId) => {
     if (window.confirm('Are you sure you want to cancel this booking?')) {
       try {
@@ -44,16 +59,11 @@ const Bookings = () => {
         alert('Booking cancelled successfully!');
       } catch (err) {
         setError('Failed to cancel booking.');
+        console.error('Error:', err);
       }
     }
   };
 
-  // ✅ useEffect (now loadData is already defined)
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // Loading spinner
   if (loading) {
     return (
       <Container className="text-center py-5">
@@ -63,7 +73,6 @@ const Bookings = () => {
     );
   }
 
-  // Main render
   return (
     <Container className="py-5">
       <h1 className="mb-4">My Bookings 🎫</h1>
