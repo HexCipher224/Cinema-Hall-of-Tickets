@@ -1,5 +1,3 @@
-# Create db.json in project root
-cat > db.json << 'EOF'
 {
   "events": [
     {
@@ -52,4 +50,3 @@ cat > db.json << 'EOF'
     }
   ]
 }
-EOF
