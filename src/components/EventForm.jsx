@@ -11,7 +11,7 @@ const EventForm = ({ show, onHide, onSubmit, event = null }) => {
     price: '',
     availableTickets: '',
     description: '',
-    imageUrl: ''
+    image: '',
   });
   
   const [error, setError] = useState('');
@@ -28,7 +28,7 @@ const EventForm = ({ show, onHide, onSubmit, event = null }) => {
         price: event.price || '',
         availableTickets: event.availableTickets || '',
         description: event.description || '',
-        imageUrl: event.imageUrl || ''
+        image:'',
       });
     } else {
       resetForm();
@@ -45,7 +45,7 @@ const EventForm = ({ show, onHide, onSubmit, event = null }) => {
       price: '',
       availableTickets: '',
       description: '',
-      imageUrl: ''
+      image: '',
     });
     setError('');
   };
@@ -117,6 +117,7 @@ const EventForm = ({ show, onHide, onSubmit, event = null }) => {
             <Col md={4}>
               <Form.Group className="mb-3">
                 <Form.Label>Category *</Form.Label>
+                
                 <Form.Select name="category" value={formData.category} onChange={handleChange} required>
                   <option value="Movie">🎬 Movie</option>
                   <option value="Concert">🎵 Concert</option>
@@ -211,13 +212,13 @@ const EventForm = ({ show, onHide, onSubmit, event = null }) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Image URL</Form.Label>
+            <Form.Label>Image</Form.Label>
             <Form.Control
               type="text"
               name="imageUrl"
-              value={formData.imageUrl}
+              value={formData.image}
               onChange={handleChange}
-              placeholder="https://example.com/event-poster.jpg"
+              placeholder="dune.jpeg"
             />
             <Form.Text className="text-muted">
               Enter a URL for the event poster image (optional)

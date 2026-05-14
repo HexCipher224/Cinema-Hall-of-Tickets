@@ -1,7 +1,7 @@
 {
   "events": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Dune: Part Two",
       "category": "Movie",
       "date": "2026-06-15",
@@ -9,11 +9,11 @@
       "location": "Cinema Hall 1",
       "price": 450,
       "availableTickets": 120,
-      "imageUrl": "https://via.placeholder.com/300x200?text=Dune+2",
+      "image": "dune.jpeg",
       "description": "The epic sci-fi sequel continues"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Coldplay Music Tour",
       "category": "Concert",
       "date": "2026-07-20",
@@ -21,11 +21,11 @@
       "location": "National Stadium",
       "price": 3500,
       "availableTickets": 500,
-      "imageUrl": "https://via.placeholder.com/300x200?text=Coldplay",
+      "image": "coldplay.jpeg",
       "description": "Live in concert! Music of the spheres tour"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Champions League Final",
       "category": "Sports",
       "date": "2026-08-10",
@@ -33,11 +33,11 @@
       "location": "Football Arena",
       "price": 5000,
       "availableTickets": 200,
-      "imageUrl": "https://via.placeholder.com/300x200?text=UCL+Final",
+      "image": "ucl.jpeg",
       "description": "The biggest football match of the year"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Kevin Hart: Reality Check",
       "category": "Comedy",
       "date": "2026-06-25",
@@ -45,8 +45,21 @@
       "location": "Comedy Club Downtown",
       "price": 1200,
       "availableTickets": 80,
-      "imageUrl": "https://via.placeholder.com/300x200?text=Kevin+Hart",
+      "image": "kevin-hart.jpeg",
       "description": "Stand-up comedy at its best"
+    },
+    {
+      "title": "Dune: Part Two",
+      "category": "Movie",
+      "date": "2026-06-15",
+      "time": "19:00",
+      "location": "Cinema Hall 1",
+      "price": 450,
+      "availableTickets": 120,
+      "description": "The epic sci-fi sequel continues",
+      "image": "",
+      "id": "xInyMcdoeFo"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
